@@ -1,4 +1,32 @@
-## Multiple Linear Regression with Outliers
+
+## 🔧 How to Run
+
+To execute the scripts, use the following commands in your terminal:
+
+```bash
+python IOR_lasso_outlier_removal.py
+python RANSAC_regression.py
+
+## 📁 Output Plots
+
+### `plots_IOR/` (Iterative Outlier Removal with Lasso)
+
+- **outlier_removal_process.png**: Shows the regression fit at different iterations while outliers are removed.
+- **after_outlier_removal.png**: Scatter plot comparing predicted vs actual values after cleaning.
+- **learning_curve.png**: Shows how model performance changes with training size.
+- **feature_importance.png**: Visualizes the Lasso coefficients (feature importance).
+
+### `plots_RANSAC/` (RANSAC + Lasso Regression)
+
+- **ransac_inliers_outliers.png**: Highlights inliers vs outliers identified by RANSAC.
+- **predicted_vs_actual.png**: Scatter plot of predicted vs actual values using the final model.
+- **ransac_iterations_grid.png**: Visual explanation of how RANSAC iteratively fits models and selects the best one.
+
+
+The file Machine Learning - LR.pdf contains a summary of the methodology, results, and explanation of both robust regression approaches.
+
+
+## Theorical Explanation Multiple Linear Regression with Outliers
 
 This is a linear regression problem that illustrates some characteristics of real applications. We have a set of $n=200$ samples with 5 independent variables $x_1, x_2, \ldots, x_p,\ p=5$ and dependent variable $y$:
 
@@ -74,6 +102,45 @@ Each iteration of cross-validation computes:
 The final performance is the average across all folds.
 
 ---
+
+
+## Code Overview
+
+This project applies Lasso regression to predict the presence of toxic algae based on environmental features. The script includes data preprocessing, iterative outlier removal, model training, cross-validation, and visualization of results.
+
+## How It Works
+
+1. **Data Loading**  
+   The script loads the training datasets (`X_train.npy` and `y_train.npy`) from the `DATA/` directory.
+
+2. **Data Preprocessing**  
+   The NumPy arrays are converted into Pandas DataFrames for better handling. The input features include:
+   - Air Temperature  
+   - Water Temperature  
+   - Wind Speed  
+   - Wind Direction  
+   - Illumination  
+
+3. **Outlier Removal with Iterative Lasso Regression**  
+   A custom function performs Lasso regression iteratively. In each iteration:
+   - The model is trained on the current dataset.
+   - The sample with the highest residual (prediction error) is considered an outlier and removed.
+   - This process is repeated 50 times to improve data quality.
+
+4. **Model Training**  
+   After cleaning the data, a final Lasso model is trained using `alpha = 3.5`.
+
+5. **Model Evaluation**  
+   - The model coefficients and intercept are printed.
+   - 5-fold cross-validation is performed to compute R² scores.
+   - A **learning curve** plot shows how model performance evolves with increasing training data.
+   - A **scatter plot** of predicted vs actual values visualizes prediction accuracy.
+
+## Visualization Outputs
+- **Learning Curve**: Shows training and validation scores as the training size increases.
+- **Predicted vs Actual Plot**: Helps assess how well the model fits the data by comparing predictions to actual target values.
+
+
 
 ### References
 
