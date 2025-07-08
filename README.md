@@ -6,7 +6,7 @@ To execute the scripts, use the following commands in your terminal:
 ```bash
 python IOR_lasso_outlier_removal.py
 python RANSAC_regression.py
-
+```
 ## 📁 Output Plots
 
 ### `plots_IOR/` (Iterative Outlier Removal with Lasso)
