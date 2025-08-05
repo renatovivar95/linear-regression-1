@@ -4,9 +4,9 @@
 To execute the scripts, use the following commands in your terminal:
 
 ```bash
-python IOR_lasso_outlier_removal.py
-python RANSAC_regression.py
-
+python MLRO - IOR.py
+python MLRO - RANSAC.py
+```
 ## 📁 Output Plots
 
 ### `plots_IOR/` (Iterative Outlier Removal with Lasso)
@@ -23,7 +23,7 @@ python RANSAC_regression.py
 - **ransac_iterations_grid.png**: Visual explanation of how RANSAC iteratively fits models and selects the best one.
 
 
-The file Machine Learning - LR.pdf contains a summary of the methodology, results, and explanation of both robust regression approaches.
+The file **Machine Learning - LR.pdf** contains a summary of the methodology, results, and explanation of both robust regression approaches.
 
 
 ## Theorical Explanation Multiple Linear Regression with Outliers
@@ -62,13 +62,6 @@ Where $Q1$ and $Q3$ are the 25th and 75th percentiles of $Y$, respectively [Wilc
 
 ---
 
-### Outlier Handling Strategy
-
-Once we identify that the outliers are part of the dataset, different strategies can be applied. The one used here is **capping (or winsorizing)**: replacing outliers in the dependent variable with a fixed upper or lower bound (e.g., 5th or 95th percentile). This preserves the data size while reducing the influence of extreme values.
-
-For the dependent variable $Y$, we implemented a function to remove outliers **one by one**, based on the largest value of quadratic loss $(\hat{y} - y)^2$. In each step, the regression model was re-trained with $(n - 1)$ samples, excluding the sample with the highest loss. After removing 25% of the samples (assumed human errors), we obtained the final model.
-
----
 
 ### Regularization: Lasso Regression (L1)
 
@@ -90,25 +83,12 @@ To select the best value of $\lambda$, **k-fold cross-validation** was used:
 
 ---
 
-### Evaluation Metrics
-
-To evaluate the model performance, **Cross-Validation $R^2$ Score** and **Mean Squared Error (MSE)** were used. Cross-validation helps assess generalization ability and avoid overfitting or underfitting.
-
-Each iteration of cross-validation computes:
-
-- $R^2$ score
-- MSE
-
-The final performance is the average across all folds.
-
----
-
 
 ## Code Overview
 
 This project applies Lasso regression to predict the presence of toxic algae based on environmental features. The script includes data preprocessing, iterative outlier removal, model training, cross-validation, and visualization of results.
 
-## How It Works
+## Data explanation and Process
 
 1. **Data Loading**  
    The script loads the training datasets (`X_train.npy` and `y_train.npy`) from the `DATA/` directory.
@@ -121,24 +101,17 @@ This project applies Lasso regression to predict the presence of toxic algae bas
    - Wind Direction  
    - Illumination  
 
-3. **Outlier Removal with Iterative Lasso Regression**  
-   A custom function performs Lasso regression iteratively. In each iteration:
-   - The model is trained on the current dataset.
-   - The sample with the highest residual (prediction error) is considered an outlier and removed.
-   - This process is repeated 50 times to improve data quality.
-
-4. **Model Training**  
-   After cleaning the data, a final Lasso model is trained using `alpha = 3.5`.
-
-5. **Model Evaluation**  
+3. **Application of Iterative Processes and Linear Regression**  
+   - Each code handles the information given and apply the methods.
+   - It generates the results and plots.
    - The model coefficients and intercept are printed.
    - 5-fold cross-validation is performed to compute R² scores.
-   - A **learning curve** plot shows how model performance evolves with increasing training data.
-   - A **scatter plot** of predicted vs actual values visualizes prediction accuracy.
 
-## Visualization Outputs
-- **Learning Curve**: Shows training and validation scores as the training size increases.
-- **Predicted vs Actual Plot**: Helps assess how well the model fits the data by comparing predictions to actual target values.
+## Brief explanation of methods
+
+**Linear Regression** is a fundamental supervised learning method used to model the relationship between one or more input features and a continuous output variable. It assumes a linear correlation between features and the target, optimizing model coefficients by minimizing the residual sum of squares (errors between predicted and actual values). However, standard linear regression is highly sensitive to outliers, which can distort the fitted line and reduce predictive performance — especially in small, real-world datasets.
+
+To address this, two robust approaches were applied: **Iterative Outlier Removal (IOR)** and **RANSAC Regression**. IOR involves fitting a linear model, identifying and removing the largest residual (outlier), and repeating this process iteratively to clean the dataset before final training. **RANSAC (Random Sample Consensus)** takes a different approach: it fits many models to random subsets of the data and selects the one that agrees best with the majority (inliers), effectively ignoring extreme outliers. Both methods aim to produce a more reliable and interpretable model by minimizing the influence of noisy or anomalous data points.
 
 
 
